@@ -6,6 +6,7 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import pickle
 from flask import Flask, request, render_template
+from tensorflow import keras
 # import pandas as pd
 # from tensorflow.keras.models import model_from_json
 # from tensorflow.keras.layers import Dense
@@ -15,15 +16,12 @@ from flask import Flask, request, render_template
 # from tensorflow.keras.utils import to_categorical
 # from tensorflow.keras.layers import Embedding, LSTM, Bidirectional, Dropout
 # from tensorflow.keras.preprocessing.sequence import pad_sequences
-from tensorflow import keras
-
-
-# model generation
 
 # # Loading data.
 # test = pd.read_csv("data/test.txt", sep=";", names=["text", "sentiment"])
 # train = pd.read_csv("data/train.txt", ";", names=["text", "sentiment"])
 # val = pd.read_csv("data/val.txt", ";", names=["text", "sentiment"])
+
 
 def data_cleaning(data):
 
@@ -123,50 +121,48 @@ def data_cleaning(data):
 
 # model.evaluate(test_data, test_label)
 
-"""
-# 1st type of saving the model
-# # Saving the trained model to a pickle file
 
-# open a file, where you ant to store the data
-file = open('model.pkl', 'wb')
+# # 1st type of saving the model
+# # # Saving the trained model to a pickle file
 
-# dump information to that file
-pickle.dump(model, file)
+# # open a file, where you ant to store the data
+# file = open('model.pkl', 'wb')
 
-# close the file
-file.close()
-# end of 1st type of model saving
-"""
+# # dump information to that file
+# pickle.dump(model, file)
 
+# # close the file
+# file.close()
+# # end of 1st type of model saving
 
-# 2nd type of saving the model
+# # 2nd type of saving the model
 # model.save('C:\StFx_Courses_Data\\PBDAI_3rdSem\\Machine_Learning\\project\\NLP\\project\\')
 model = keras.models.load_model('C:\StFx_Courses_Data\\PBDAI_3rdSem\\Machine_Learning\\project\\NLP\\project\\')
-# end of 2nd type of modelsaving
+# # end of 2nd type of modelsaving
 
-"""
-# 3rd type of saving:
-# saving using JSON nad weights:
-# serialize model to JSON
-model_json = model.to_json()
-with open("model.json", "w") as json_file:
-    json_file.write(model_json)
-# serialize weights to HDF5
-model.save_weights("model.h5")
-print("Saved model to disk")
 
-# later...
+# # 3rd type of saving:
+# # saving using JSON nad weights:
+# # serialize model to JSON
+# model_json = model.to_json()
+# with open("model.json", "w") as json_file:
+#     json_file.write(model_json)
+# # serialize weights to HDF5
+# model.save_weights("model.h5")
+# print("Saved model to disk")
 
-# load json and create model
-json_file = open('model.json', 'r')
-loaded_model_json = json_file.read()
-json_file.close()
-loaded_model = model_from_json(loaded_model_json)
-# load weights into new model
-loaded_model.load_weights("model.h5")
-print("Loaded model from disk")
-# end of 3rd type of model saving
-"""
+# # later...
+
+# # load json and create model
+# json_file = open('model.json', 'r')
+# loaded_model_json = json_file.read()
+# json_file.close()
+# loaded_model = model_from_json(loaded_model_json)
+# # load weights into new model
+# loaded_model.load_weights("model.h5")
+# print("Loaded model from disk")
+# # end of 3rd type of model saving
+
 
 tokenizer = pickle.load(open('tokenizer', 'rb'))
 
