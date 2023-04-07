@@ -6,25 +6,24 @@ from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import pickle
 from flask import Flask, request, render_template
-import pandas as pd
-from tensorflow.keras.models import model_from_json
-from tensorflow.keras.layers import Dense
-from tensorflow.keras.callbacks import ModelCheckpoint
-from tensorflow.keras import Sequential
-from keras.preprocessing.text import Tokenizer
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.layers import Embedding, LSTM, Bidirectional, Dropout
-from tensorflow.keras.preprocessing.sequence import pad_sequences
+# import pandas as pd
+# from tensorflow.keras.models import model_from_json
+# from tensorflow.keras.layers import Dense
+# from tensorflow.keras.callbacks import ModelCheckpoint
+# from tensorflow.keras import Sequential
+# from keras.preprocessing.text import Tokenizer
+# from tensorflow.keras.utils import to_categorical
+# from tensorflow.keras.layers import Embedding, LSTM, Bidirectional, Dropout
+# from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow import keras
-
 
 
 # model generation
 
-# Loading data.
-test = pd.read_csv("data/test.txt", sep=";", names=["text", "sentiment"])
-train = pd.read_csv("data/train.txt", ";", names=["text", "sentiment"])
-val = pd.read_csv("data/val.txt", ";", names=["text", "sentiment"])
+# # Loading data.
+# test = pd.read_csv("data/test.txt", sep=";", names=["text", "sentiment"])
+# train = pd.read_csv("data/train.txt", ";", names=["text", "sentiment"])
+# val = pd.read_csv("data/val.txt", ";", names=["text", "sentiment"])
 
 def data_cleaning(data):
 
@@ -60,44 +59,42 @@ def data_cleaning(data):
     return data
 
 
+# # Cleaning the datasets.
+# train["text"] = train["text"].map(data_cleaning)
+# test["text"] = test["text"].map(data_cleaning)
+# val["text"] = val["text"].map(data_cleaning)
 
+# train_data = train["text"].tolist()
+# test_data = test["text"].tolist()
+# val_data = val["text"].tolist()
 
-# Cleaning the datasets.
-train["text"] = train["text"].map(data_cleaning)
-test["text"] = test["text"].map(data_cleaning)
-val["text"] = val["text"].map(data_cleaning)
+# # Converting the labels to numbers for easy representation.
+# dict_feel = {"joy": 0, "love": 1, "anger": 2, "sadness": 3, "surprise": 4, "fear": 5}
+# train["sentiment"] = train["sentiment"].replace(
+#     {"joy": 0, "love": 1, "anger": 2, "sadness": 3, "surprise": 4, "fear": 5}
+# )
+# test["sentiment"] = test["sentiment"].replace(
+#     {"joy": 0, "love": 1, "anger": 2, "sadness": 3, "surprise": 4, "fear": 5}
+# )
+# val["sentiment"] = val["sentiment"].replace(
+#     {"joy": 0, "love": 1, "anger": 2, "sadness": 3, "surprise": 4, "fear": 5}
+# )
 
-train_data = train["text"].tolist()
-test_data = test["text"].tolist()
-val_data = val["text"].tolist()
+# train_label = to_categorical(train["sentiment"])
+# test_label = to_categorical(test["sentiment"])
+# val_label = to_categorical(val["sentiment"])
 
-# Converting the labels to numbers for easy representation.
-dict_feel = {"joy": 0, "love": 1, "anger": 2, "sadness": 3, "surprise": 4, "fear": 5}
-train["sentiment"] = train["sentiment"].replace(
-    {"joy": 0, "love": 1, "anger": 2, "sadness": 3, "surprise": 4, "fear": 5}
-)
-test["sentiment"] = test["sentiment"].replace(
-    {"joy": 0, "love": 1, "anger": 2, "sadness": 3, "surprise": 4, "fear": 5}
-)
-val["sentiment"] = val["sentiment"].replace(
-    {"joy": 0, "love": 1, "anger": 2, "sadness": 3, "surprise": 4, "fear": 5}
-)
+# # Creating tokenizer object with oov_token as "NA" rather than default zero.
+# tokenizer = Tokenizer(16000, oov_token="NA")
+# tokenizer.fit_on_texts(train_data)
+# train_data = tokenizer.texts_to_sequences(train_data)
+# test_data = tokenizer.texts_to_sequences(test_data)
+# val_data = tokenizer.texts_to_sequences(val_data)
 
-train_label = to_categorical(train["sentiment"])
-test_label = to_categorical(test["sentiment"])
-val_label = to_categorical(val["sentiment"])
-
-# Creating tokenizer object with oov_token as "NA" rather than default zero.
-tokenizer = Tokenizer(16000, oov_token="NA")
-tokenizer.fit_on_texts(train_data)
-train_data = tokenizer.texts_to_sequences(train_data)
-test_data = tokenizer.texts_to_sequences(test_data)
-val_data = tokenizer.texts_to_sequences(val_data)
-
-# Making the length of sequences to fixed size.
-train_data = pad_sequences(train_data, 71, padding="post")
-test_data = pad_sequences(test_data, 71, padding="post")
-val_data = pad_sequences(val_data, 71, padding="post")
+# # Making the length of sequences to fixed size.
+# train_data = pad_sequences(train_data, 71, padding="post")
+# test_data = pad_sequences(test_data, 71, padding="post")
+# val_data = pad_sequences(val_data, 71, padding="post")
 
 
 # # Building LSTM model.
@@ -197,12 +194,16 @@ def Predict_Next_Words(model, tokenizer, text):
     print(predicted_word)
     return predicted_word
 
+
 app = Flask(__name__)
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
 
-@app.route('/predict',methods=['POST'])
+
+@app.route('/predict', methods=['POST'])
 def predict():
     '''
     For rendering results on HTML GUI
