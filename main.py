@@ -18,6 +18,7 @@ from keras.preprocessing.text import Tokenizer
 from tensorflow.keras.utils import to_categorical
 from keras.layers import Embedding, LSTM, Bidirectional, Dropout
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+import pickle
 
 # Loading data.
 test = pd.read_csv("data/test.txt", sep=";", names=["text", "sentiment"])
@@ -94,10 +95,13 @@ test_data = tokenizer.texts_to_sequences(test_data)
 val_data = tokenizer.texts_to_sequences(val_data)
 
 # Making the length of sequences to fixed size.
-train_data = pad_sequences(train_data, 81, padding="post")
-test_data = pad_sequences(test_data, 81, padding="post")
-val_data = pad_sequences(val_data, 81, padding="post")
+train_data = pad_sequences(train_data, 71, padding="post")
+test_data = pad_sequences(test_data, 71, padding="post")
+val_data = pad_sequences(val_data, 71, padding="post")
 
+
+
+""""
 # Building CNN Configuration.
 # And adding additional feature learned from CNN to the testing data.
 
@@ -129,12 +133,12 @@ for i in pred_cnn:
     count += 1
 test_data = np.array(test_data)
 # Adding feature to test data finished
-
+"""
 
 # Building LSTM model.
 model = Sequential()
-model.add(Embedding(16000, 64, input_length=81))
-model.add(Dropout(0.5))
+model.add(Embedding(16000, 64, input_length=71))
+model.add(Dropout(0.3))
 model.add(Bidirectional(LSTM(128, return_sequences=True)))
 model.add(Bidirectional(LSTM(64)))
 model.add(Dropout(0.3))
@@ -156,9 +160,29 @@ stat = model.fit(
 
 
 model.evaluate(test_data, test_label)
+"""
+# Saving the trained model to a pickle file
+
+# open a file, where you ant to store the data
+file = open('model', 'wb')
+
+# dump information to that file
+pickle.dump(model, file)
+
+# close the file
+file.close()
+# open a file, where you stored the pickled data
+file = open('model', 'rb')
+
+# dump information to that file
+loaded_model = pickle.load(file)
+
+# close the file
+file.close()
+"""
+
 
 # Predicting the sentiment using user input
-
 
 def Predict_Next_Words(model, tokenizer, text):
     text = " ".join(text)
@@ -167,7 +191,7 @@ def Predict_Next_Words(model, tokenizer, text):
     text = text.tolist()
     sequence = tokenizer.texts_to_sequences([text])
     sequence = tf.keras.preprocessing.sequence.pad_sequences(
-        sequence, 81, padding="post"
+        sequence, 71, padding="post"
     )
     sequence = np.array(sequence)
     preds = np.argmax(model.predict(sequence))
@@ -192,7 +216,7 @@ while True:
     else:
         try:
             text = text.split(" ")
-            text = text[-79:]
+            text = text[-69:]
             print(text)
 
             Predict_Next_Words(model, tokenizer, text)
