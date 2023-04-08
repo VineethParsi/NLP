@@ -1,7 +1,7 @@
 import numpy as np
 import re
 import nltk
-import tensorflow as tf
+# import tensorflow as tf
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 import pickle
@@ -175,9 +175,11 @@ def Predict_Next_Words(model, tokenizer, text):
     text = np.array(text)
     text = text.tolist()
     sequence = tokenizer.texts_to_sequences([text])
-    sequence = tf.keras.preprocessing.sequence.pad_sequences(
-        sequence, 71, padding="post"
-    )
+    # sequence = tf.keras.preprocessing.sequence.pad_sequences(
+    #     sequence, 71, padding="post"
+    # )
+    for i in range(0, 71-len(sequence[0])):
+        sequence[0].append(0)
     sequence = np.array(sequence)
     preds = np.argmax(model.predict(sequence))
     predicted_word = ""
