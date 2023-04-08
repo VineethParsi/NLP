@@ -104,18 +104,20 @@ def data_cleaning(data):
 # model.add(Dropout(0.3))
 # model.add(Dense(128))
 # model.add(Dense(6, activation="softmax"))
-# checkpoint = ModelCheckpoint(
-#     "sentiment_analysis.h5", monitor="accuracy", verbose=1, save_best_only=True
-# )
+
+# # checkpoint = ModelCheckpoint(
+# #     "sentiment_analysis.h5", monitor="accuracy", verbose=1, save_best_only=True
+# # )
+
 # model.compile(optimizer="adam", loss="categorical_crossentropy", metrics=["accuracy"])
 # print(model.summary())
 
 # stat = model.fit(
 #     train_data,
 #     train_label,
-#     epochs=15,
+#     epochs=1,
 #     validation_data=(val_data, val_label),
-#     callbacks=[checkpoint],
+#     # callbacks=[checkpoint],
 # )
 
 
@@ -138,7 +140,7 @@ def data_cleaning(data):
 # # 2nd type of saving the model
 # model.save('C:\StFx_Courses_Data\\PBDAI_3rdSem\\Machine_Learning\\project\\NLP\\project\\')
 model = keras.models.load_model('.')
-# # end of 2nd type of modelsaving
+# end of 2nd type of modelsaving
 
 
 # # 3rd type of saving:
