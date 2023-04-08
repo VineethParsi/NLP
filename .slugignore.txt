@@ -1,0 +1,8 @@
+/assests
+/data
+/figs
+/outputs
+/src
+/variables
+/main.py
+/report.md
