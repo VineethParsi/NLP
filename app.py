@@ -137,7 +137,7 @@ def data_cleaning(data):
 
 # # 2nd type of saving the model
 # model.save('C:\StFx_Courses_Data\\PBDAI_3rdSem\\Machine_Learning\\project\\NLP\\project\\')
-model = keras.models.load_model('C:\StFx_Courses_Data\\PBDAI_3rdSem\\Machine_Learning\\project\\NLP\\project\\')
+model = keras.models.load_model('.')
 # # end of 2nd type of modelsaving
 
 
